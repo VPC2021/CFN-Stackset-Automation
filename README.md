@@ -11,7 +11,6 @@ This repository provides a standardized, scalable approach to deploying AWS Clou
 project-root/
 ├── template.yaml                  # CloudFormation template
 ├── account-parameters.json        # Per-account parameter values
-├── deploy-with-config.py          # StackSet creation script
 ├── deploy-auto-loop.py            # Automated multi-account deployer
 ├── deploy-manual-approach.py      # Manual deployment (one account at a time)
 └── README.md                      # This documentation
@@ -88,11 +87,6 @@ Parameter precedence:
 ### 1. Validate CloudFormation Template
 ```bash
 aws cloudformation validate-template   --template-body file://template.yaml   --profile deployment-admin
-```
-
-### 2. Create the StackSet
-```bash
-python deploy-with-config.py
 ```
 
 ### 3. Deploy to Target Accounts
