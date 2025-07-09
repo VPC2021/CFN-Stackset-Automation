@@ -4,9 +4,9 @@ import json
 import time
 
 def deploy_auto_loop():
-    session = boto3.Session(profile_name='deployment-tools-admin')
+    session = boto3.Session(profile_name='REPLACE_ME')
     cf = session.client('cloudformation')
-    stackset_name = "S3LifecycleCleanupStackSet"
+    stackset_name = "StackSet-Name"
     
     # Load configuration
     with open('account-parameters.json', 'r') as f:
