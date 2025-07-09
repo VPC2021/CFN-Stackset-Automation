@@ -1,0 +1,36 @@
+{
+    "accounts": [
+        {
+            "accountId": "123456789012",
+            "regions": [
+                "ap-southeast-2"
+            ],
+            "parameters": [
+                {
+                    "ParameterKey": "RecipientEmailAddresses",
+                    "ParameterValue": "aws-notify@abc.com"
+                },
+                {
+                    "ParameterKey": "AccountName",
+                    "ParameterValue": "Sandbox"
+                }
+            ]
+        },
+        {
+            "accountId": "123456789012",
+            "regions": [
+                "ap-southeast-2"
+            ],
+            "parameters": [
+                {
+                    "ParameterKey": "RecipientEmailAddresses",
+                    "ParameterValue": "aws-notify@xyz.com"
+                },
+                {
+                    "ParameterKey": "AccountName",
+                    "ParameterValue": "PreProd"
+                }
+            ]
+        }
+    ]
+}
