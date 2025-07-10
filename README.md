@@ -73,9 +73,9 @@ python deploy-auto-loop.py \
 
 | Argument             | Default                   | Description                                 |
 |----------------------|---------------------------|---------------------------------------------|
-| `--profile`          | deployment-tools-admin    | AWS CLI profile name                        |
-| `--stackset-name`    | IAM-Key-Status-Report     | Name of the StackSet                        |
-| `--template`         | IAM-Key-Status-Report.yaml| Path to the CloudFormation template         |
+| `--profile`          | Default-admin             | AWS CLI profile name                        |
+| `--stackset-name`    | Default                   | Name of the StackSet                        |
+| `--template`         | Sample.yaml               | Path to the CloudFormation template         |
 | `--config`           | account-parameters.json   | Path to JSON config file                    |
 | `--update`           | -                         | Enables update mode                         |
 | `--account`          | -                         | Deploy/update a specific account            |
