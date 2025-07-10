@@ -4,6 +4,60 @@ import json
 import time
 import argparse
 
+def create_or_update_stackset(cf, stackset_name, template_body):
+    """Create StackSet if it doesn't exist, or update if it does"""
+    try:
+        cf.describe_stack_set(StackSetName=stackset_name)
+        print(f"🔄 Updating StackSet {stackset_name} template...")
+        response = cf.update_stack_set(
+            StackSetName=stackset_name,
+            TemplateBody=template_body,
+            Capabilities=['CAPABILITY_IAM']
+        )
+        
+        # Wait for template update to complete
+        operation_id = response['OperationId']
+        print(f"⏳ Waiting for template update to complete...")
+        
+        max_attempts = 60
+        attempt = 0
+        
+        while attempt < max_attempts:
+            try:
+                operation = cf.describe_stack_set_operation(
+                    StackSetName=stackset_name,
+                    OperationId=operation_id
+                )
+                status = operation['StackSetOperation']['Status']
+                
+                if status in ['SUCCEEDED', 'FAILED', 'STOPPED']:
+                    if status == 'SUCCEEDED':
+                        print(f"✅ StackSet {stackset_name} template updated")
+                    else:
+                        print(f"❌ Template update {status}")
+                    break
+                
+                print(f"   Template update status: {status}")
+                time.sleep(10)
+                attempt += 1
+                
+            except Exception as e:
+                print(f"Error checking template update status: {e}")
+                break
+        
+        if attempt >= max_attempts:
+            print(f"⚠️ Timeout waiting for template update")
+            
+    except cf.exceptions.StackSetNotFoundException:
+        print(f"🔧 Creating StackSet {stackset_name}...")
+        cf.create_stack_set(
+            StackSetName=stackset_name,
+            TemplateBody=template_body,
+            Capabilities=['CAPABILITY_IAM'],
+            Description='Default StackSet'
+        )
+        print(f"✅ StackSet {stackset_name} created")
+
 def update_stack_instance(cf, stackset_name, config, target_account=None):
     """Update existing stack instance (manual approach - one at a time)"""
     try:
@@ -70,13 +124,19 @@ def update_stack_instance(cf, stackset_name, config, target_account=None):
     except Exception as e:
         print(f"✗ Error updating {account['accountId']}: {str(e)}")
 
-def deploy_manual_approach():
-    session = boto3.Session(profile_name='REPLACE_ME')
+def deploy_manual_approach(profile_name, stackset_name, template_file, config_file):
+    session = boto3.Session(profile_name=profile_name)
     cf = session.client('cloudformation')
-    stackset_name = "REPLACE_STACKSET"
+    
+    # Load CloudFormation template
+    with open(template_file, 'r') as f:
+        template_body = f.read()
+    
+    # Create or update StackSet
+    create_or_update_stackset(cf, stackset_name, template_body)
     
     # Load configuration
-    with open('account-parameters.json', 'r') as f:
+    with open(config_file, 'r') as f:
         config = json.load(f)
     
     # Check existing instances
@@ -161,17 +221,35 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Deploy or update CloudFormation StackSet instances (manual approach)')
     parser.add_argument('--update', action='store_true', help='Update existing stack instance instead of deploying new one')
     parser.add_argument('--account', type=str, help='Target specific account ID for update operation')
+    parser.add_argument('--update-params', action='store_true', help='Update parameters for specific account (use with --update)')
+    parser.add_argument('--profile', type=str, default='Profile-admin', help='AWS profile name (default: Profile-admin)')
+    parser.add_argument('--stackset-name', type=str, default='Template', help='StackSet name (default: Template)')
+    parser.add_argument('--template', type=str, default='Template.yaml', help='CloudFormation template file (default: Template.yaml)')
+    parser.add_argument('--config', type=str, default='account-parameters.json', help='Account parameters config file (default: account-parameters.json)')
     
     args = parser.parse_args()
     
     if args.update:
-        session = boto3.Session(profile_name='REPLACE_ME')
+        session = boto3.Session(profile_name=args.profile)
         cf = session.client('cloudformation')
-        stackset_name = "REPLACE_STACKSET"
         
-        with open('account-parameters.json', 'r') as f:
-            config = json.load(f)
+        # Load CloudFormation template
+        with open(args.template, 'r') as f:
+            template_body = f.read()
         
-        update_stack_instance(cf, stackset_name, config, args.account)
+        # Create or update StackSet (template changes auto-propagate to instances)
+        create_or_update_stackset(cf, args.stackset_name, template_body)
+        
+        # Only update instances if specific account requested and update-params flag used
+        if args.account and args.update_params:
+            with open(args.config, 'r') as f:
+                config = json.load(f)
+            print(f"🔄 Updating parameters for account: {args.account}")
+            update_stack_instance(cf, args.stackset_name, config, args.account)
+        elif args.account:
+            print(f"ℹ️ Template updated for StackSet. Use --update-params to also update parameters for account {args.account}")
+        else:
+            print("✅ Template updated - changes will propagate to all instances automatically")
+            print("ℹ️ Use --account and --update-params to update specific account parameters")
     else:
-        deploy_manual_approach()
+        deploy_manual_approach(args.profile, args.stackset_name, args.template, args.config)
