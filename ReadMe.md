@@ -1,3 +1,7 @@
+✅ Rephrased and generalized README.md for GitHub
+md
+Copy
+Edit
 # 🔐 AWS StackSet Deployment Framework for Multi-Account Automation
 
 This solution provides a flexible, automated approach for deploying CloudFormation StackSets across multiple AWS accounts using account-specific parameters.
@@ -37,9 +41,10 @@ Deploys to all accounts sequentially
 Applies custom parameters from configuration file
 
 Updating the Template
-
+bash
+Copy
+Edit
 python deploy-auto-loop.py --update
-
 Updates the template for the StackSet
 
 Automatically applies to all existing stack instances
@@ -47,22 +52,26 @@ Automatically applies to all existing stack instances
 Updating Parameters
 Single account:
 
+bash
+Copy
+Edit
 python deploy-auto-loop.py --update --account 123456789012
-
 All accounts:
 
+bash
+Copy
+Edit
 python deploy-auto-loop.py --update --update-params
-
 Custom Execution
-
+bash
+Copy
+Edit
 python deploy-auto-loop.py \
   --profile my-profile \
   --stackset-name MyStackSet \
   --template my-template.yaml \
   --config my-config.json
-
 ⚙️ CLI Parameters
-
 Argument	Default	Description
 --profile	deployment-tools-admin	AWS CLI profile name
 --stackset-name	IAM-Key-Status-Report	Name of the StackSet
@@ -73,7 +82,9 @@ Argument	Default	Description
 --update-params	-	Refreshes parameters for all instances
 
 🧾 Configuration File Format
-
+json
+Copy
+Edit
 {
   "accounts": [
     {
@@ -88,7 +99,6 @@ Argument	Default	Description
   ]
 }
 ✨ Key Features
-
 Account-Specific Deployments: Override parameters per account using JSON
 
 Safe Sequential Rollout: One account at a time to minimize risk
@@ -100,7 +110,6 @@ Flexible Updates: Update template or parameters independently
 Custom Profiles & Templates: Works with any template and AWS CLI profile
 
 🔍 Monitoring
-
 CloudFormation operation status printed in real-time
 
 Timeout handling included (20-minute default)
@@ -108,9 +117,7 @@ Timeout handling included (20-minute default)
 Logs available in each target account’s CloudWatch
 
 ⚠️ Limitations
-
 Technical
-
 Only one StackSet operation can run at a time (AWS constraint)
 
 Deployments are sequential (no parallelization)
@@ -120,7 +127,6 @@ StackSets must be supported in the selected regions
 Parameter updates require individual operations per account
 
 Operational
-
 IAM roles and trust relationships must be pre-configured
 
 Script requires pre-set AWS CLI profile with admin access
@@ -130,7 +136,6 @@ Failed operations must be manually investigated
 Cross-account services (e.g., SES) require setup in advance
 
 ✅ Best Practices
-
 Test with a single account using --account
 
 Roll out in stages (Dev → QA → Prod)
@@ -142,7 +147,6 @@ Monitor progress during deployments and updates
 Use CloudFormation drift detection periodically
 
 🛠 Troubleshooting
-
 Common Issues & Fixes
 
 Problem	Solution
@@ -153,7 +157,6 @@ IAM permission errors	Verify StackSet roles and trust relationships
 Timeout or stuck deployments	Check current operations and increase timeout if needed
 
 🧪 Example Use Cases
-
 IAM Access Key Auditing
 
 Organization-wide security guardrails
