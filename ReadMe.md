@@ -1,4 +1,4 @@
-✅ Rephrased and generalized README.md for GitHub
+
 md
 Copy
 Edit
