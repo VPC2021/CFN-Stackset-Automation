@@ -28,7 +28,7 @@ This solution helps you:
 
 ### Initial Deployment
 
-- Update the default parameters in the deploy-auto-loop.py script.
+- Update the default parameters in the deploy-auto-loop.py  and deploy-manual-approach.py scripts.
 
 ```
 parser.add_argument('--profile', type=str, default='deployment-admin', help='AWS profile name (default: deployment-admin)')
