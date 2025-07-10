@@ -2,7 +2,7 @@
 
 This solution provides a flexible, automated approach for deploying CloudFormation StackSets across multiple AWS accounts using account-specific parameters.
 
-Originally designed for IAM key rotation reporting, the framework can be adapted for any multi-account use case that requires reliable infrastructure deployment and configuration propagation.
+The framework can be adapted for any multi-account use case that requires reliable infrastructure deployment and configuration propagation.
 
 ---
 
@@ -18,7 +18,7 @@ This solution helps you:
 
 ## 📁 Included Files
 
-- `template.yaml` – CloudFormation template (customize for your use case)
+- `Sample.yaml` – CloudFormation template (customize for your use case)
 - `deploy-auto-loop.py` – Deployment script with update and retry logic
 - `account-parameters.json` – Configuration file for account-specific parameters
 
@@ -169,11 +169,3 @@ python deploy-auto-loop.py \
 - Multi-account baseline provisioning
 
 ---
-
-## 📜 License
-
-MIT License
-
----
-
-**GitHub Repo:** [https://github.com/VPC2021/CFN-Stackset-Automation](https://github.com/VPC2021/CFN-Stackset-Automation)
