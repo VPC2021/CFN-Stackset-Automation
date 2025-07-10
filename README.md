@@ -28,6 +28,15 @@ This solution helps you:
 
 ### Initial Deployment
 
+- Update the default parameters in the deploy-auto-loop.py script.
+
+```
+parser.add_argument('--profile', type=str, default='deployment-admin', help='AWS profile name (default: deployment-admin)')
+parser.add_argument('--stackset-name', type=str, default='Default', help='StackSet name (default: Default)')
+parser.add_argument('--template', type=str, default='Sample.yaml', help='CloudFormation template file (default: Sample.yaml)')
+parser.add_argument('--config', type=str, default='account-parameters.json', help='Account parameters config file (default: account-parameters.json)')
+```
+
 ```bash
 python deploy-auto-loop.py
 ```
