@@ -1,7 +1,4 @@
 
-md
-Copy
-Edit
 # 🔐 AWS StackSet Deployment Framework for Multi-Account Automation
 
 This solution provides a flexible, automated approach for deploying CloudFormation StackSets across multiple AWS accounts using account-specific parameters.
